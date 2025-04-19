@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>آلة حاسبة بسيطة</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      height: 100vh;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s;
+    }
+
+    .calculator {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      padding: 20px;
+      width: 250px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    #display {
+      height: 50px;
+      font-size: 24px;
+      background: #eee;
+      margin-bottom: 10px;
+      padding: 10px;
+      text-align: right;
+      border-radius: 4px;
+      overflow: auto;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    button {
+      padding: 15px;
+      font-size: 18px;
+      border: none;
+      background: #007BFF;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    #clear {
+      grid-column: span 3;
+      background: #dc3545;
+    }
+
+    #theme-toggle {
+      background: #6c757d;
+    }
+
+    /* Dark mode styles */
+    body.dark-mode {
+      background: #1c1c1c;
+    }
+
+    body.dark-mode .calculator {
+      background: #2b2b2b;
+      color: white;
+    }
+
+    body.dark-mode #display {
+      background: #444;
+      color: white;
+    }
+
+    body.dark-mode button {
+      background: #444;
+      color: white;
+    }
+
+    body.dark-mode button:hover {
+      background: #666;
+    }
+
+    body.dark-mode #clear {
+      background: #c82333;
+    }
+
+    body.dark-mode #theme-toggle {
+      background: #999;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="calculator" id="calc">
+    <div id="display">0</div>
+    <div class="buttons">
+      <button>7</button><button>8</button><button>9</button><button>/</button>
+      <button>4</button><button>5</button><button>6</button><button>*</button>
+      <button>1</button><button>2</button><button>3</button><button>-</button>
+      <button>0</button><button>.</button><button>=</button><button>+</button>
+      <button id="clear">C</button>
+      <button id="theme-toggle">☀️/🌙</button>
+    </div>
+  </div>
+
+  <audio id="click-sound" src="https://www.soundjay.com/button/sounds/button-16.mp3" preload="auto"></audio>
+
+  <script>
+    let display = document.getElementById("display");
+    let buttons = document.querySelectorAll("button");
+    let input = "";
+    let clickSound = document.getElementById("click-sound");
+
+    buttons.forEach(button => {
+      button.addEventListener("click", () => {
+        const value = button.textContent;
+
+        // تشغيل الصوت
+        clickSound.currentTime = 0;
+        clickSound.play();
+
+        // تشغيل الاهتزاز
+        if (window.navigator.vibrate) {
+          window.navigator.vibrate(30);
+        }
+
+        if (value === "=") {
+          try {
+            input = eval(input).toString();
+          } catch {
+            input = "Error";
+          }
+        } else if (value === "C") {
+          input = "";
+        } else if (value === "☀️/🌙") {
+          document.body.classList.toggle("dark-mode");
+        } else {
+          input += value;
+        }
+
+        display.textContent = input || "0";
+      });
+    });
+  </script>
+</body>
+</html>
